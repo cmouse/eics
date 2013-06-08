@@ -11,3 +11,9 @@
 *.lai
 *.la
 *.a
+
+# Automake stuff
+autom4te.cache
+
+# Backup files
+*~
