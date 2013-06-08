@@ -14,6 +14,17 @@
 
 # Automake stuff
 autom4te.cache
+libtool
+config.log
+config.status
 
-# Backup files
+# Other stuff
 *~
+Makefile
+src/Makefile
+lib/Makefile
+src/config.h
+src/stamp-h1
+lib/.deps
+src/.deps
+src/eics
