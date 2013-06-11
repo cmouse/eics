@@ -7,13 +7,11 @@ AM_CONFIG_HEADER(src/config.h)
 AC_USE_SYSTEM_EXTENSIONS
 
 LT_INIT
+AC_PROG_CC
 AC_PROG_CXX
-gl_EARLY
 AC_PROG_LIBTOOL
-AM_PATH_DOTCONF(1.0.0, [], AC_MSG_ERROR([dotconf is required to compile this software]))
 
 AC_GNU_SOURCE
-gl_INIT
 
 PKG_PROG_PKG_CONFIG
 PKG_CHECK_MODULES(GNUTLS, [gnutls], [], AC_MSG_ERROR([GnuTLS is required to compile this software]))
@@ -21,11 +19,12 @@ PKG_CHECK_MODULES(GNUTLS, [gnutls], [], AC_MSG_ERROR([GnuTLS is required to comp
 BOOST_REQUIRE(1.46)
 
 BOOST_ARRAY
+BOOST_DATE_TIME
 BOOST_FILESYSTEM
-BOOST_PROGRAM_OPTIONS
 BOOST_THREADS
+BOOST_TOKENIZER
 
 AC_CHECK_LIB(acl, acl_init)
 AC_CHECK_LIB(attr, attr_list)
 
-AC_OUTPUT(Makefile src/Makefile lib/Makefile)
+AC_OUTPUT(Makefile src/Makefile)
