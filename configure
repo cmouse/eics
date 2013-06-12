@@ -8038,6 +8038,10 @@ _lt_linker_boilerplate=`cat conftest.err`
 $RM -r conftest*
 
 
+## CAVEAT EMPTOR:
+## There is no encapsulation within the following macros, do not change
+## the running order or otherwise move them around unless you know exactly
+## what you are doing...
 if test -n "$compiler"; then
 
 lt_prog_compiler_no_builtin_flag=
@@ -15864,6 +15868,31 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+for ac_header in sys/vfs.h sys/statfs.h
+do :
+  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
+  cat >>confdefs.h <<_ACEOF
+#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+
+fi
+
+done
+
+for ac_func in statfs
+do :
+  ac_fn_c_check_func "$LINENO" "statfs" "ac_cv_func_statfs"
+if test "x$ac_cv_func_statfs" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_STATFS 1
+_ACEOF
+
+fi
+done
+
+
 
 
 
@@ -18238,6 +18267,12 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 fi
 
+
+
+ac_fn_c_check_func "$LINENO" "gnutls_load_file" "ac_cv_func_gnutls_load_file"
+if test "x$ac_cv_func_gnutls_load_file" = xyes; then :
+
+fi
 
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for acl_init in -lacl" >&5
