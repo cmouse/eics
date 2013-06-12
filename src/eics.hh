@@ -1,9 +1,21 @@
 #include "config.h"
 #include <iostream>
 #include <string>
+extern "C" {
 #include <errno.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <gnutls/gnutls.h>
+#include <gnutls/crypto.h>
+#include <gnutls/abstract.h>
+#if GNUTLS_VERSION_NUMBER < 0x030100
+int gnutls_load_file(const char* filename, gnutls_datum_t * data);
+void gnutls_unload_file(gnutls_datum_t data);
+#endif
+};
 #include <map>
 #include <bitset>
 #include <fstream>
@@ -18,8 +30,6 @@
 #include <boost/foreach.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
-#include <gnutls/gnutls.h>
-#include <gnutls/crypto.h>
 
 #define LOG(level) \
 if (eics::Log::level > eics::Log::getLogLevel()) \
@@ -38,6 +48,21 @@ namespace eics {
    typedef std::bitset<EICS_POLICY_BITS> PolicyBits;
    typedef std::map<std::wstring, std::wstring> GlobalPolicy;
    typedef std::map<std::wstring, PathPolicy> FsPolicy;
+
+  class Log {
+  public:
+     enum TLogLevel { error = 0, warn = 1, info = 2, debug = 3 };
+     Log(TLogLevel level) : logLevel(level) { };
+     ~Log();
+     std::wstringstream& get() { return buf; };
+
+     static TLogLevel getLogLevel() { return Log::minLogLevel; };
+     static void setLogLevel(TLogLevel value) { Log::minLogLevel = value; };
+   private:
+     std::wstringstream buf;
+     TLogLevel logLevel;
+     static TLogLevel minLogLevel;
+   };
  
   class PathPolicy {
   public:
@@ -113,6 +138,10 @@ namespace eics {
   public:
      Keys() {};
      ~Keys() {};
+     bool loadPublicKey(const boost::filesystem::path &pubkey_path);
+  private:
+     gnutls_pubkey_t pubkey;
+     gnutls_privkey_t privkey;
   };
 
   class Report {
@@ -127,7 +156,15 @@ namespace eics {
      ~Processor() {};
      bool configure(const boost::filesystem::path &configFile) { 
        if (this->_policy.load(configFile) == false) return false;
-       this->scanFileSystems();
+       boost::filesystem::path pubkey_path;
+       std::wstring param;
+       if (_policy.get(L"publickeypath", param) == false) {
+          LOG(error) << "(keys.cc: " << __LINE__ << L") missing configuration parameter PublickeyPath";
+          return false;
+       }
+       pubkey_path = param;
+       if (this->_keys.loadPublicKey(pubkey_path) == false) return false;
+       if (this->scanFileSystems() == false) return false;
        return true;
      };
 
@@ -144,26 +181,11 @@ namespace eics {
 
      Database _database;
      Policy _policy;
-     std::vector<Filesystem> _filesystems;
+     std::map<dev_t, Filesystem> _filesystems;
      Report _report;
      Keys _keys;
   };
 
   bool eics_hash_file(const std::string &file, gnutls_digest_algorithm_t algo, std::string &result);
-
-  class Log {
-  public:
-     enum TLogLevel { error = 0, warn = 1, info = 2, debug = 3 };
-     Log(TLogLevel level) : logLevel(level) { };
-     ~Log();
-     std::wstringstream& get() { return buf; };
-
-     static TLogLevel getLogLevel() { return Log::minLogLevel; };
-     static void setLogLevel(TLogLevel value) { Log::minLogLevel = value; };
-   private:
-     std::wstringstream buf; 
-     TLogLevel logLevel;
-     static TLogLevel minLogLevel;
-   };
 
 };
