@@ -1,23 +1,44 @@
 #include "eics.hh"
 
 bool eics::Keys::loadPublicKey(const boost::filesystem::path& pubkey_path) {
-   gnutls_datum_t datum;
-   int gerr;
+   BIO *in = BIO_new_file(pubkey_path.string().c_str(), "rb");
 
-   gerr = gnutls_load_file(pubkey_path.string().c_str(), &datum);
-   if (gerr) {
-       LOG(error) << "(keys.cc: " << __LINE__ << L") " << gnutls_strerror(gerr);
-       return false;
+   if (in == NULL) {
+      eics::eics_openssl_error_log(L"keys.cc", __LINE__);
+      return false;
    }
 
-   gerr = gnutls_pubkey_import(pubkey, &datum, GNUTLS_X509_FMT_PEM);
-   gnutls_unload_file(datum);
+   // load key from BIO 
+   PEM_read_bio_PUBKEY(in, &pubkey, eics_pass_cb, NULL);
 
-   if (gerr) {
-       LOG(error) << "(keys.cc: " << __LINE__ << L") " << gnutls_strerror(gerr);
-       return false;
+   if (!pubkey) {
+      eics::eics_openssl_error_log(L"keys.cc", __LINE__);
+   } else {
+      LOG(debug) << L"(keys.cc:" << __LINE__ << L") loaded public key from " << pubkey_path.wstring();
    }
-   LOG(debug) << "(keys.cc: " << __LINE__ << L") loaded public key from " << pubkey_path.wstring();
+   BIO_free(in);
 
-   return true; 
+   return pubkey != NULL; 
+}
+
+bool eics::Keys::loadPrivateKey(const boost::filesystem::path& privkey_path) {
+   BIO *in = BIO_new_file(privkey_path.string().c_str(), "rb");
+
+   if (in == NULL) {
+      eics::eics_openssl_error_log(L"keys.cc", __LINE__);
+      return false;
+   }
+
+   // load key from BIO
+   PEM_read_bio_PrivateKey(in, &privkey, eics_pass_cb, NULL);
+
+   if (!privkey) {
+      eics::eics_openssl_error_log(L"keys.cc", __LINE__);
+   } else {
+      LOG(debug) << L"(keys.cc:" << __LINE__ << L") loaded private key from " << privkey_path.wstring();
+   }
+
+   BIO_free(in);
+
+   return privkey != NULL;
 }
