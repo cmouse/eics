@@ -54,8 +54,9 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_eics_OBJECTS = eics-filesystem.$(OBJEXT) eics-policy.$(OBJEXT) \
 	eics-entry.$(OBJEXT) eics-hash.$(OBJEXT) \
-	eics-logging.$(OBJEXT) eics-keys.$(OBJEXT) eics-main.$(OBJEXT) \
-	gnutls-compat.$(OBJEXT)
+	eics-logging.$(OBJEXT) eics-keys.$(OBJEXT) getpass.$(OBJEXT) \
+	eics-processor.$(OBJEXT) eics-misc.$(OBJEXT) \
+	eics-main.$(OBJEXT)
 eics_OBJECTS = $(am_eics_OBJECTS)
 am__DEPENDENCIES_1 =
 eics_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -139,8 +140,6 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
-GNUTLS_CFLAGS = @GNUTLS_CFLAGS@
-GNUTLS_LIBS = @GNUTLS_LIBS@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -222,6 +221,8 @@ localstatedir = @localstatedir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
+openssl_CFLAGS = @openssl_CFLAGS@
+openssl_LIBS = @openssl_LIBS@
 pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
@@ -234,9 +235,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-eics_SOURCES = config.h eics.hh filesystem.cc policy.cc eics.hh entry.cc hash.cc logging.cc keys.cc main.cc gnutls-compat.c
-eics_CXXFLAGS = $(BOOST_CPPFLAGS) $(GNUTLS_CFLAGS)
-eics_LDADD = $(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) $(BOOST_PROGRAM_OPTIONS_LDFLAGS) $(BOOST_PROGRAM_OPTIONS_LIBS) $(BOOST_SYSTEM_LDFLAGS) $(BOOST_SYSTEM_LIBS) $(BOOST_THREAD_LDFLAGS) $(BOOST_THREAD_LIBS) $(GNUTLS_LIBS) 
+eics_SOURCES = config.h eics.hh filesystem.cc policy.cc eics.hh entry.cc hash.cc logging.cc keys.cc getpass.c processor.cc misc.cc main.cc
+eics_CXXFLAGS = $(BOOST_CPPFLAGS) $(openssl_CFLAGS)
+eics_LDADD = $(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) $(BOOST_PROGRAM_OPTIONS_LDFLAGS) $(BOOST_PROGRAM_OPTIONS_LIBS) $(BOOST_SYSTEM_LDFLAGS) $(BOOST_SYSTEM_LIBS) $(BOOST_THREAD_LDFLAGS) $(BOOST_THREAD_LIBS) $(openssl_LIBS) 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -346,8 +347,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-keys.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-logging.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-misc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-policy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gnutls-compat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-processor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getpass.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -474,6 +477,34 @@ eics-keys.obj: keys.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='keys.cc' object='eics-keys.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -c -o eics-keys.obj `if test -f 'keys.cc'; then $(CYGPATH_W) 'keys.cc'; else $(CYGPATH_W) '$(srcdir)/keys.cc'; fi`
+
+eics-processor.o: processor.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -MT eics-processor.o -MD -MP -MF $(DEPDIR)/eics-processor.Tpo -c -o eics-processor.o `test -f 'processor.cc' || echo '$(srcdir)/'`processor.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/eics-processor.Tpo $(DEPDIR)/eics-processor.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='processor.cc' object='eics-processor.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -c -o eics-processor.o `test -f 'processor.cc' || echo '$(srcdir)/'`processor.cc
+
+eics-processor.obj: processor.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -MT eics-processor.obj -MD -MP -MF $(DEPDIR)/eics-processor.Tpo -c -o eics-processor.obj `if test -f 'processor.cc'; then $(CYGPATH_W) 'processor.cc'; else $(CYGPATH_W) '$(srcdir)/processor.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/eics-processor.Tpo $(DEPDIR)/eics-processor.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='processor.cc' object='eics-processor.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -c -o eics-processor.obj `if test -f 'processor.cc'; then $(CYGPATH_W) 'processor.cc'; else $(CYGPATH_W) '$(srcdir)/processor.cc'; fi`
+
+eics-misc.o: misc.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -MT eics-misc.o -MD -MP -MF $(DEPDIR)/eics-misc.Tpo -c -o eics-misc.o `test -f 'misc.cc' || echo '$(srcdir)/'`misc.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/eics-misc.Tpo $(DEPDIR)/eics-misc.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='misc.cc' object='eics-misc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -c -o eics-misc.o `test -f 'misc.cc' || echo '$(srcdir)/'`misc.cc
+
+eics-misc.obj: misc.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -MT eics-misc.obj -MD -MP -MF $(DEPDIR)/eics-misc.Tpo -c -o eics-misc.obj `if test -f 'misc.cc'; then $(CYGPATH_W) 'misc.cc'; else $(CYGPATH_W) '$(srcdir)/misc.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/eics-misc.Tpo $(DEPDIR)/eics-misc.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='misc.cc' object='eics-misc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -c -o eics-misc.obj `if test -f 'misc.cc'; then $(CYGPATH_W) 'misc.cc'; else $(CYGPATH_W) '$(srcdir)/misc.cc'; fi`
 
 eics-main.o: main.cc
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -MT eics-main.o -MD -MP -MF $(DEPDIR)/eics-main.Tpo -c -o eics-main.o `test -f 'main.cc' || echo '$(srcdir)/'`main.cc

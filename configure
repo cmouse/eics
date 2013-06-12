@@ -635,8 +635,8 @@ BOOST_DATE_TIME_LDFLAGS
 BOOST_CPPFLAGS
 DISTCHECK_CONFIGURE_FLAGS
 BOOST_ROOT
-GNUTLS_LIBS
-GNUTLS_CFLAGS
+openssl_LIBS
+openssl_CFLAGS
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
 PKG_CONFIG
@@ -785,8 +785,8 @@ CXXCPP
 PKG_CONFIG
 PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR
-GNUTLS_CFLAGS
-GNUTLS_LIBS
+openssl_CFLAGS
+openssl_LIBS
 BOOST_ROOT'
 
 
@@ -1445,9 +1445,10 @@ Some influential environment variables:
               directories to add to pkg-config's search path
   PKG_CONFIG_LIBDIR
               path overriding pkg-config's built-in search path
-  GNUTLS_CFLAGS
-              C compiler flags for GNUTLS, overriding pkg-config
-  GNUTLS_LIBS linker flags for GNUTLS, overriding pkg-config
+  openssl_CFLAGS
+              C compiler flags for openssl, overriding pkg-config
+  openssl_LIBS
+              linker flags for openssl, overriding pkg-config
   BOOST_ROOT  Location of Boost installation
 
 Use these variables to override the choices made by `configure' or to help
@@ -15868,7 +15869,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-for ac_header in sys/vfs.h sys/statfs.h
+for ac_header in sys/vfs.h sys/statfs.h termios.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
@@ -16015,19 +16016,19 @@ $as_echo "no" >&6; }
 fi
 
 pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GNUTLS" >&5
-$as_echo_n "checking for GNUTLS... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for openssl" >&5
+$as_echo_n "checking for openssl... " >&6; }
 
-if test -n "$GNUTLS_CFLAGS"; then
-    pkg_cv_GNUTLS_CFLAGS="$GNUTLS_CFLAGS"
+if test -n "$openssl_CFLAGS"; then
+    pkg_cv_openssl_CFLAGS="$openssl_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gnutls\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gnutls") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libssl\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libssl") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GNUTLS_CFLAGS=`$PKG_CONFIG --cflags "gnutls" 2>/dev/null`
+  pkg_cv_openssl_CFLAGS=`$PKG_CONFIG --cflags "libssl" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -16035,16 +16036,16 @@ fi
  else
     pkg_failed=untried
 fi
-if test -n "$GNUTLS_LIBS"; then
-    pkg_cv_GNUTLS_LIBS="$GNUTLS_LIBS"
+if test -n "$openssl_LIBS"; then
+    pkg_cv_openssl_LIBS="$openssl_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gnutls\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gnutls") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libssl\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libssl") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_GNUTLS_LIBS=`$PKG_CONFIG --libs "gnutls" 2>/dev/null`
+  pkg_cv_openssl_LIBS=`$PKG_CONFIG --libs "libssl" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -16065,21 +16066,21 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        GNUTLS_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gnutls" 2>&1`
+	        openssl_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libssl" 2>&1`
         else
-	        GNUTLS_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gnutls" 2>&1`
+	        openssl_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libssl" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
-	echo "$GNUTLS_PKG_ERRORS" >&5
+	echo "$openssl_PKG_ERRORS" >&5
 
-	as_fn_error $? "GnuTLS is required to compile this software" "$LINENO" 5
+	as_fn_error $? "OpenSSL is required to compile this software" "$LINENO" 5
 elif test $pkg_failed = untried; then
      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-	as_fn_error $? "GnuTLS is required to compile this software" "$LINENO" 5
+	as_fn_error $? "OpenSSL is required to compile this software" "$LINENO" 5
 else
-	GNUTLS_CFLAGS=$pkg_cv_GNUTLS_CFLAGS
-	GNUTLS_LIBS=$pkg_cv_GNUTLS_LIBS
+	openssl_CFLAGS=$pkg_cv_openssl_CFLAGS
+	openssl_LIBS=$pkg_cv_openssl_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 

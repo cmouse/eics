@@ -13,11 +13,11 @@ AC_PROG_LIBTOOL
 
 AC_GNU_SOURCE
 
-AC_CHECK_HEADERS([sys/vfs.h sys/statfs.h])
+AC_CHECK_HEADERS([sys/vfs.h sys/statfs.h termios.h])
 AC_CHECK_FUNCS([statfs])
 
 PKG_PROG_PKG_CONFIG
-PKG_CHECK_MODULES(GNUTLS, [gnutls], [], AC_MSG_ERROR([GnuTLS is required to compile this software]))
+PKG_CHECK_MODULES(openssl, [libssl], [], AC_MSG_ERROR([OpenSSL is required to compile this software]))
 
 BOOST_REQUIRE(1.46)
 
