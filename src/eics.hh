@@ -2,19 +2,7 @@
 #include <iostream>
 #include <string>
 extern "C" {
-#include <errno.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <gnutls/gnutls.h>
-#include <gnutls/crypto.h>
-#include <gnutls/abstract.h>
-#if GNUTLS_VERSION_NUMBER < 0x030100
-int gnutls_load_file(const char* filename, gnutls_datum_t * data);
-void gnutls_unload_file(gnutls_datum_t data);
-#endif
+#include "eics.h"
 };
 #include <map>
 #include <bitset>
@@ -136,12 +124,13 @@ namespace eics {
 
   class Keys {
   public:
-     Keys() {};
-     ~Keys() {};
+     Keys() { pubkey = privkey = NULL; };
+     ~Keys() { if (pubkey != NULL) EVP_PKEY_free(pubkey); if (privkey != NULL) EVP_PKEY_free(privkey); };
      bool loadPublicKey(const boost::filesystem::path &pubkey_path);
+     bool loadPrivateKey(const boost::filesystem::path &privkey_path);
   private:
-     gnutls_pubkey_t pubkey;
-     gnutls_privkey_t privkey;
+     EVP_PKEY *pubkey;
+     EVP_PKEY *privkey;
   };
 
   class Report {
@@ -154,22 +143,9 @@ namespace eics {
   public:
      Processor() {};
      ~Processor() {};
-     bool configure(const boost::filesystem::path &configFile) { 
-       if (this->_policy.load(configFile) == false) return false;
-       boost::filesystem::path pubkey_path;
-       std::wstring param;
-       if (_policy.get(L"publickeypath", param) == false) {
-          LOG(error) << "(keys.cc: " << __LINE__ << L") missing configuration parameter PublickeyPath";
-          return false;
-       }
-       pubkey_path = param;
-       if (this->_keys.loadPublicKey(pubkey_path) == false) return false;
-       if (this->scanFileSystems() == false) return false;
-       return true;
-     };
-
+     bool configure(const boost::filesystem::path &configFile);
      bool initialize();
-     bool check() { return false; };
+     bool check();
      bool update();
 
      bool loadDatabase();
@@ -186,6 +162,5 @@ namespace eics {
      Keys _keys;
   };
 
-  bool eics_hash_file(const std::string &file, gnutls_digest_algorithm_t algo, std::string &result);
-
+  void eics_openssl_error_log(const std::wstring& file, int line);
 };
