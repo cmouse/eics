@@ -16,19 +16,19 @@ std::string makeHexDump(const std::string& str)
 }
 
 int main(int argc, char * const argv[]) {
-  int gerr;
-  if ((gerr = gnutls_global_init()) != GNUTLS_E_SUCCESS) {
-     LOG(error) << L"(main.cc:" <<  __LINE__ << L") " << gnutls_strerror(gerr);
-     return 1;
-  }
-
   // setup locale based on user's choice
   std::locale::global( std::locale("") );
+
+  SSL_library_init();
+  OpenSSL_add_all_algorithms();
+  OpenSSL_add_all_ciphers();
+  OpenSSL_add_all_digests();
+  ERR_load_crypto_strings();
+  SSL_load_error_strings();
 
   eics::Processor proc;
   proc.configure("policy.conf");
   proc.check();
 
-  gnutls_global_deinit();
   return 0;
 }
