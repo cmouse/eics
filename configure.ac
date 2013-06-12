@@ -13,6 +13,9 @@ AC_PROG_LIBTOOL
 
 AC_GNU_SOURCE
 
+AC_CHECK_HEADERS([sys/vfs.h sys/statfs.h])
+AC_CHECK_FUNCS([statfs])
+
 PKG_PROG_PKG_CONFIG
 PKG_CHECK_MODULES(GNUTLS, [gnutls], [], AC_MSG_ERROR([GnuTLS is required to compile this software]))
 
@@ -23,6 +26,8 @@ BOOST_DATE_TIME
 BOOST_FILESYSTEM
 BOOST_THREADS
 BOOST_TOKENIZER
+
+AC_CHECK_FUNC(gnutls_load_file)
 
 AC_CHECK_LIB(acl, acl_init)
 AC_CHECK_LIB(attr, attr_list)
