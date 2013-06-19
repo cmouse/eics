@@ -89,9 +89,17 @@ bool Policy::load(const boost::filesystem::path &file)
    bool inPathContext=false;
    ssize_t linenumber=0;
    std::wstring line;
-   std::wifstream policyFile(file.string().c_str(), std::wifstream::in);
    boost::filesystem::path path;
    PolicyBits rootPolicy(0);
+
+   LOG(debug) << L"(policy.cc:" << __LINE__ << L") Loading policy file " << file;
+
+   std::wifstream policyFile(file.string().c_str(), std::wifstream::in);
+
+   if (!policyFile.is_open()) {
+     LOG(error) << L"(policy.cc:" << __LINE__ << L") cannot open file " << file;
+     return false;
+   }
 
    // create default policy
    boost::filesystem::path rootPath(L"/");

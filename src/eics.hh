@@ -114,12 +114,46 @@ namespace eics {
   public:
      DatabaseEntry() {};
      ~DatabaseEntry() {};
+     bool load(std::wifstream &in);
+
+     dev_t device() const {
+       return st.st_dev;
+     };
+
+     ino_t inode() const {
+       return st.st_ino;
+     };
+
+     const boost::filesystem::path path() const {
+       return _path;
+     }
+
+     const std::string &hash1() const {
+        return hash_sha256;
+     }
+     const std::string &hash2() const {
+        return hash_whirlpool;
+     }
+
+     void setPath(const boost::filesystem::path& path) { _path = path; }
+
+     void setStat(const struct stat *st) { this->st = *st; }
+  private:
+     struct stat st;
+     boost::filesystem::path _path;
+
+     std::string hash_sha256;
+     std::string hash_whirlpool;
   };
 
   class Database {
   public:
-     Database() {};
-     ~Database() {};
+     Database();
+     ~Database();
+     bool load(const boost::filesystem::path &file);
+     DatabaseEntry* find(dev_t dev, const std::wstring& name);
+     DatabaseEntry* find(dev_t dev, ino_t ino);
+     DatabaseEntry* create(dev_t dev, ino_t ino, const std::wstring& name); 
   };
 
   class Keys {
@@ -163,4 +197,5 @@ namespace eics {
   };
 
   void eics_openssl_error_log(const std::wstring& file, int line);
+  uint64_t eics_crc64(const unsigned char *data, size_t len);
 };
