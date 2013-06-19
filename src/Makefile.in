@@ -56,10 +56,11 @@ am_eics_OBJECTS = eics-filesystem.$(OBJEXT) eics-policy.$(OBJEXT) \
 	eics-entry.$(OBJEXT) eics-hash.$(OBJEXT) \
 	eics-logging.$(OBJEXT) eics-keys.$(OBJEXT) getpass.$(OBJEXT) \
 	eics-processor.$(OBJEXT) eics-misc.$(OBJEXT) \
-	eics-main.$(OBJEXT)
+	eics-database.$(OBJEXT) eics-crc.$(OBJEXT) eics-main.$(OBJEXT)
 eics_OBJECTS = $(am_eics_OBJECTS)
 am__DEPENDENCIES_1 =
 eics_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1)
@@ -108,6 +109,9 @@ BOOST_FILESYSTEM_LDFLAGS = @BOOST_FILESYSTEM_LDFLAGS@
 BOOST_FILESYSTEM_LDPATH = @BOOST_FILESYSTEM_LDPATH@
 BOOST_FILESYSTEM_LIBS = @BOOST_FILESYSTEM_LIBS@
 BOOST_LDPATH = @BOOST_LDPATH@
+BOOST_PROGRAM_OPTIONS_LDFLAGS = @BOOST_PROGRAM_OPTIONS_LDFLAGS@
+BOOST_PROGRAM_OPTIONS_LDPATH = @BOOST_PROGRAM_OPTIONS_LDPATH@
+BOOST_PROGRAM_OPTIONS_LIBS = @BOOST_PROGRAM_OPTIONS_LIBS@
 BOOST_ROOT = @BOOST_ROOT@
 BOOST_SYSTEM_LDFLAGS = @BOOST_SYSTEM_LDFLAGS@
 BOOST_SYSTEM_LDPATH = @BOOST_SYSTEM_LDPATH@
@@ -235,8 +239,8 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-eics_SOURCES = config.h eics.hh filesystem.cc policy.cc eics.hh entry.cc hash.cc logging.cc keys.cc getpass.c processor.cc misc.cc main.cc
-eics_CXXFLAGS = $(BOOST_CPPFLAGS) $(openssl_CFLAGS)
+eics_SOURCES = config.h eics.hh filesystem.cc policy.cc entry.cc hash.cc logging.cc keys.cc getpass.c processor.cc misc.cc database.cc crc.cc main.cc
+eics_CXXFLAGS = $(BOOST_CPPFLAGS) $(openssl_CFLAGS) -DSYSCONFDIR="\"$(sysconfdir)\""
 eics_LDADD = $(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) $(BOOST_PROGRAM_OPTIONS_LDFLAGS) $(BOOST_PROGRAM_OPTIONS_LIBS) $(BOOST_SYSTEM_LDFLAGS) $(BOOST_SYSTEM_LIBS) $(BOOST_THREAD_LDFLAGS) $(BOOST_THREAD_LIBS) $(openssl_LIBS) 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -341,6 +345,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-crc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-database.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-entry.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-filesystem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eics-hash.Po@am__quote@
@@ -505,6 +511,34 @@ eics-misc.obj: misc.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='misc.cc' object='eics-misc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -c -o eics-misc.obj `if test -f 'misc.cc'; then $(CYGPATH_W) 'misc.cc'; else $(CYGPATH_W) '$(srcdir)/misc.cc'; fi`
+
+eics-database.o: database.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -MT eics-database.o -MD -MP -MF $(DEPDIR)/eics-database.Tpo -c -o eics-database.o `test -f 'database.cc' || echo '$(srcdir)/'`database.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/eics-database.Tpo $(DEPDIR)/eics-database.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='database.cc' object='eics-database.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -c -o eics-database.o `test -f 'database.cc' || echo '$(srcdir)/'`database.cc
+
+eics-database.obj: database.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -MT eics-database.obj -MD -MP -MF $(DEPDIR)/eics-database.Tpo -c -o eics-database.obj `if test -f 'database.cc'; then $(CYGPATH_W) 'database.cc'; else $(CYGPATH_W) '$(srcdir)/database.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/eics-database.Tpo $(DEPDIR)/eics-database.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='database.cc' object='eics-database.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -c -o eics-database.obj `if test -f 'database.cc'; then $(CYGPATH_W) 'database.cc'; else $(CYGPATH_W) '$(srcdir)/database.cc'; fi`
+
+eics-crc.o: crc.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -MT eics-crc.o -MD -MP -MF $(DEPDIR)/eics-crc.Tpo -c -o eics-crc.o `test -f 'crc.cc' || echo '$(srcdir)/'`crc.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/eics-crc.Tpo $(DEPDIR)/eics-crc.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='crc.cc' object='eics-crc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -c -o eics-crc.o `test -f 'crc.cc' || echo '$(srcdir)/'`crc.cc
+
+eics-crc.obj: crc.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -MT eics-crc.obj -MD -MP -MF $(DEPDIR)/eics-crc.Tpo -c -o eics-crc.obj `if test -f 'crc.cc'; then $(CYGPATH_W) 'crc.cc'; else $(CYGPATH_W) '$(srcdir)/crc.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/eics-crc.Tpo $(DEPDIR)/eics-crc.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='crc.cc' object='eics-crc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -c -o eics-crc.obj `if test -f 'crc.cc'; then $(CYGPATH_W) 'crc.cc'; else $(CYGPATH_W) '$(srcdir)/crc.cc'; fi`
 
 eics-main.o: main.cc
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(eics_CXXFLAGS) $(CXXFLAGS) -MT eics-main.o -MD -MP -MF $(DEPDIR)/eics-main.Tpo -c -o eics-main.o `test -f 'main.cc' || echo '$(srcdir)/'`main.cc
